@@ -56,7 +56,14 @@ end
 #вывод комментариев к посту
 
 get '/details/:id' do
-	post_id = params[:id] 
+	post_id = params[:id]
+
+	# проверка существования поста с таким id 
+	# @results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+
+	# unless @results.length > 0
+	# 	@error = "error"
+	# end
 
 	erb "Displaying for #{post_id}"
 end
