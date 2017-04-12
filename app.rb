@@ -34,7 +34,7 @@ end
 
 get '/' do
 
-	#выбираем список постов из БД
+	# выбираем список постов из БД
 
 	@results = @db.execute 'SELECT * FROM Posts ORDER BY id DESC'
 
@@ -55,13 +55,11 @@ post '/new' do
 
 	@db.execute 'insert into Posts (content, created_date) values (?, datetime())', [content]
 
-	#перенаправление на главную страницу
-	redirect to '/'
-
-	#erb "You typed #{content}"	
+	# перенаправление на главную страницу
+	redirect to '/'	
 end
 
-#вывод комментариев к посту
+# вывод комментариев к посту
 
 get '/details/:id' do
 
@@ -74,6 +72,7 @@ get '/details/:id' do
 	# передаем только одну строку из results
 	@row = results[0]
 
+	# выбираем комментарии для поста
 	@comments = @db.execute 'SELECT * FROM Comments WHERE post_id =? ORDER BY created_date', [post_id]
 
 	# проверка существования поста с таким id 
@@ -102,7 +101,8 @@ post '/details/:id' do
 		return erb :details
 	end
 
+	# добавляем коммент в БД
 	@db.execute 'insert into Comments (comment, post_id, created_date) values (?, ?, datetime())', [comment, post_id]
 
-	redirect to "/details/#{post_id}"
+	redirect to '/details/' + post_id
 end
