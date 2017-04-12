@@ -75,6 +75,15 @@ get '/details/:id' do
 	end
 end
 
+# обработчик post-запроса /datails (комментарий)
+# браузер отправляет данные на сервер
 post '/datails/:id' do
-	
+
+	# получаем переменную из URL
+	post_id = params[:id]
+
+	# получаем переменную из post-запроса
+	comment = params[:comment]
+
+	erb "You just type #{comment}"
 end
