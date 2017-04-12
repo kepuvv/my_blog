@@ -5,11 +5,24 @@
 	<br>
 	<br>
 	Added at <%= @row['created_date'] %>
+	<hr>
 </p>
 <br>
 <h4>Comments:</h4>
+<br>
 <p>
-	<form action="/datails/<%= @row['id'] %>" method="POST">
+	<% @comments.each do |comment| %>
+	<p>
+		<%= comment['comment'] %>
+		<br>
+		Added at <%= comment['created_date'] %>
+	</p>
+	<hr>
+<% end %>	
+</p>
+
+<p>
+	<form action="/details/<%= @row['id'] %>" method="POST">
 	 	<textarea name="comment" class="form-control" rows="5" placeholder="Type comment"></textarea>
 	 	<br>
 		<button type="submit" class="btn btn-primary">Add comment</button>

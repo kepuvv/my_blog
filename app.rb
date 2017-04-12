@@ -53,7 +53,7 @@ post '/new' do
 		return erb :new
 	end
 
-	@db.execute 'insert into posts (content, created_date) values (?, datetime())', [content]
+	@db.execute 'insert into Posts (content, created_date) values (?, datetime())', [content]
 
 	#перенаправление на главную страницу
 	redirect to '/'
@@ -74,6 +74,8 @@ get '/details/:id' do
 	# передаем только одну строку из results
 	@row = results[0]
 
+	@comments = @db.execute 'SELECT * FROM Comments WHERE post_id =? ORDER BY created_date', [post_id]
+
 	# проверка существования поста с таким id 
 	unless results.length > 0
 	 	@error = "error"
@@ -85,7 +87,7 @@ end
 
 # обработчик post-запроса /datails (комментарий)
 # браузер отправляет данные на сервер
-post '/datails/:id' do
+post '/details/:id' do
 
 	# получаем переменную из URL
 	post_id = params[:id]
@@ -93,5 +95,14 @@ post '/datails/:id' do
 	# получаем переменную из post-запроса
 	comment = params[:comment]
 
-	erb "You just type #{comment}"
+	content = params[:content]
+
+	if comment.length <= 0
+		@error = 'Type text'
+		return erb :details
+	end
+
+	@db.execute 'insert into Comments (comment, post_id, created_date) values (?, ?, datetime())', [comment, post_id]
+
+	redirect to "/details/#{post_id}"
 end
