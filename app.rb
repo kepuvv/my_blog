@@ -73,6 +73,8 @@ get '/details/:id' do
 	else
 		erb :details
 	end
+end
 
+post '/datails/:id' do
 	
 end
