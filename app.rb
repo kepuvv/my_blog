@@ -56,17 +56,23 @@ end
 #вывод комментариев к посту
 
 get '/details/:id' do
+
+	# получаем переменную id из url
 	post_id = params[:id]
 
+	# получаем пост с этим id
 	results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+
+	# передаем только одну строку из results
 	@row = results[0]
 
 	# проверка существования поста с таким id 
-	# @results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+	unless results.length > 0
+	 	@error = "error"
+	 	erb :notyet
+	else
+		erb :details
+	end
 
-	# unless @results.length > 0
-	# 	@error = "error"
-	# end
-
-	erb :details
+	
 end

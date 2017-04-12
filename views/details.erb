@@ -6,3 +6,12 @@
 	<br>
 	Added at <%= @row['created_date'] %>
 </p>
+<br>
+<h4>Comments:</h4>
+<p>
+	<form action="/datails/<%= @row['id'] %>" method="POST">
+	 	<textarea name="comment" class="form-control" rows="5" placeholder="Type comment"></textarea>
+	 	<br>
+		<button type="submit" class="btn btn-primary">Add comment</button>
+	</form>
+</p>
