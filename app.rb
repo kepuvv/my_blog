@@ -20,7 +20,7 @@ configure do
 	(
 	    id INTEGER 		PRIMARY KEY AUTOINCREMENT NOT NULL,
 	    created_date 	DATE NOT NULL,
-	    contetnt 		TEXT
+	    content 		TEXT
 	)'
 end
 
@@ -34,6 +34,11 @@ end
 
 post '/new' do
 	content = params[:content]
+
+	if content.length <= 0
+		@error = 'Type text'
+		return erb :new
+	end
 
 	erb "You typed #{content}"	
 end
