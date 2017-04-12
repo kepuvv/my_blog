@@ -52,3 +52,11 @@ post '/new' do
 
 	#erb "You typed #{content}"	
 end
+
+#вывод комментариев к посту
+
+get '/details/:id' do
+	post_id = params[:id] 
+
+	erb "Displaying for #{post_id}"
+end
