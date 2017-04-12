@@ -58,6 +58,9 @@ end
 get '/details/:id' do
 	post_id = params[:id]
 
+	results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+	@row = results[0]
+
 	# проверка существования поста с таким id 
 	# @results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
 
@@ -65,5 +68,5 @@ get '/details/:id' do
 	# 	@error = "error"
 	# end
 
-	erb "Displaying for #{post_id}"
+	erb :details
 end
