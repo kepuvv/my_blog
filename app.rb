@@ -12,14 +12,20 @@ end
 # вытягиваем пост и комменты к нему из БД
 def get_post_and_comments post_id, db
 	# получаем пост с этим id
-	@results = db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+	results = db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+
+	#проверка существования поста с таким id 
+	if results.length <= 0
+		@error = 'We cant find this post'
+		return @error
+	end
 
 	# передаем только одну строку из results
-	@row = @results[0]
+	@row = results[0]
 
 	# выбираем комментарии для поста
 	@comments = db.execute 'SELECT * FROM Comments WHERE post_id =? ORDER BY created_date', [post_id]
-	return @row, @comments, @results
+	return @row, @comments
 end
 
 before do
@@ -81,12 +87,11 @@ get '/details/:id' do
 
 	get_post_and_comments post_id, @db
 
-	# проверка существования поста с таким id 
-	unless @results.length > 0
-	 	@error = "error"
-	 	erb :notyet
-	else
-		erb :details
+	# если поста с таким id нет, то выдает ошибку
+	unless @error  
+		erb :details 
+		else
+		erb :notyet
 	end
 end
 
