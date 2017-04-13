@@ -9,6 +9,19 @@ def init_db
 	@db.results_as_hash = true
 end
 
+# вытягиваем пост и комменты к нему из БД
+def get_post_and_comments post_id, db
+	# получаем пост с этим id
+	@results = db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
+
+	# передаем только одну строку из results
+	@row = @results[0]
+
+	# выбираем комментарии для поста
+	@comments = db.execute 'SELECT * FROM Comments WHERE post_id =? ORDER BY created_date', [post_id]
+	return @row, @comments, @results
+end
+
 before do
 	init_db
 end
@@ -66,17 +79,10 @@ get '/details/:id' do
 	# получаем переменную id из url
 	post_id = params[:id]
 
-	# получаем пост с этим id
-	results = @db.execute 'SELECT * FROM Posts WHERE id =?', [post_id]
-
-	# передаем только одну строку из results
-	@row = results[0]
-
-	# выбираем комментарии для поста
-	@comments = @db.execute 'SELECT * FROM Comments WHERE post_id =? ORDER BY created_date', [post_id]
+	get_post_and_comments post_id, @db
 
 	# проверка существования поста с таким id 
-	unless results.length > 0
+	unless @results.length > 0
 	 	@error = "error"
 	 	erb :notyet
 	else
@@ -94,8 +100,9 @@ post '/details/:id' do
 	# получаем переменную из post-запроса
 	comment = params[:comment]
 
-	content = params[:content]
+	get_post_and_comments post_id, @db
 
+	# проверка пустого коммента
 	if comment.length <= 0
 		@error = 'Type text'
 		return erb :details
