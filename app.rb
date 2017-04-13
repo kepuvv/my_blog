@@ -66,10 +66,10 @@ get '/new' do
 end
 
 post '/new' do
-	content = params[:content]
+	@content = params[:content]
 	author = params[:author]
 
-	if content.length <= 0
+	if @content.length <= 0
 		@error = 'Type text'
 		return erb :new
 	elsif 
@@ -78,7 +78,7 @@ post '/new' do
 		return erb :new
 	end
 
-	@db.execute 'insert into Posts (content, author, created_date) values (?,?, datetime())', [content, author]
+	@db.execute 'insert into Posts (content, author, created_date) values (?,?, datetime())', [@content, author]
 
 	# перенаправление на главную страницу
 	redirect to '/'	
